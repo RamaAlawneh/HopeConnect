@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HopeConnect Feedback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f0f4f8, #dce8f2);
+      padding: 40px 20px;
+      margin: 0;
+      color: #2c3e50;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .feedback-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #3a6ea5;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #cfd9df;
+      border-radius: 10px;
+      font-size: 16px;
+      background-color: #f9fcff;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #6ca0dc;
+      background-color: #ffffff;
+    }
+
+    button {
+      background-color: #3a6ea5;
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2e5b91;
+    }
+
+    .success-message {
+      text-align: center;
+      color: green;
+      margin-top: 15px;
+    }
+
+    .error-message {
+      text-align: center;
+      color: red;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="feedback-container">
+    <h2>Send Us Your Feedback</h2>
+    <form id="feedbackForm">
+      <input type="text" id="user_name" placeholder="Your Name" required />
+      <input type="email" id="email" placeholder="Your Email" required />
+      <textarea id="message" rows="4" placeholder="Your Feedback" required></textarea>
+      <button type="submit">Submit</button>
+      <div id="responseMessage"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('feedbackForm');
+    const responseDiv = document.getElementById('responseMessage');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user_name = document.getElementById('user_name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      try {
+        const res = await fetch('http://localhost:3000/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_name, email, message })
+        });
+
+        if (res.ok) {
+          responseDiv.innerHTML = '<p class="success-message">Feedback submitted successfully!</p>';
+          form.reset();
+        } else {
+          responseDiv.innerHTML = '<p class="error-message">Failed to send feedback. Please try again later.</p>';
+        }
+      } catch (err) {
+        responseDiv.innerHTML = '<p class="error-message">Error occurred while sending feedback.</p>';
+      }
+    });
+  </script>
+
+</body>
+</html>
